@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script
+     src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Pide cita previa</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/litera/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+     integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+
+   
+
+</head>
+
+<body>
+    <script>
+
+        $(function(){
+          
+            alert("Debido al alto volumen de solicitudes, recomendamos pedir cita con varios días de antelación. Gracias");
+
+            //cambiar atributo min para validación
+            var fecha = new Date();
+            var anio = fecha.getFullYear();
+            var dia = fecha.getDate();
+            var _mes = fecha.getMonth();//viene con valores de 0 al 11
+            _mes = _mes + 1;//ahora lo tienes de 1 al 12
+            //ahora le agregas un 0 para el formato date
+            if (_mes < 10) { 
+                var mes = "0" + _mes;
+            }
+            else{
+                var mes = _mes.toString;
+            }
+            document.getElementById("date").min = anio+'-'+mes+'-'+dia; 
+
+            //creción dinámica del options tienda
+            let $tiendamlp1 = $('<option />', {
+                    text: 'Mobles la Paz Sant Adrià',
+                    value: 'miquel@mobleslapaz.com',
+                    });
+                    let $tiendamlp2 = $('<option />', {
+                    text: 'Mobles la Paz Puigcerdà',
+                    value: 'marc@mobleslapaz.com',
+                    });
+                    let $tiendamlp3 = $('<option />', {
+                    text: 'Mobles la Paz Lope de Vega',
+                    value: 'mlp3@mobleslapaz.com',
+                    });
+                    let $tiendamlp4 = $('<option />', {
+                    text: 'Mobles la Paz Lope de Vega, sofás y descanso',
+                    value: 'info@mobleslapaz.com',
+                    });
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp2,$tiendamlp3,$tiendamlp4); 
+
+            //hide elements
+            $('#infofecha').hide();
+            $('#mensajeerror').hide();
+            //esconde horario
+            $('#horario').hide();
+            $('#titleHorario').hide();
+
+            //esconde motivo
+            $('#motivo').hide();
+            $('#titleMotivo').hide();
+
+            //esconde mensaje
+            $('#message').hide();
+            //hide stores
+            $('#tienda').hide();
+            $('#titleTienda').hide();   
+            //hide maps
+            $('#mapaMlp1').hide();
+            $('#mapaMlp2').hide();
+            $('#mapaMlp3').hide();
+            $('#mapaMlp4').hide();
+
+                //fase 1, muestra horario visita
+                $('#date').change(function(){
+                    //var today = $('#date').value.toLocaleString('en-GB').split(' ')[0].split('/').reverse().join('-');
+                    date=document.getElementById('date').valueAsDate;
+                    dayofwekk=date.getDay();
+                    //si se selecciona un domigo...
+                    if(dayofwekk== 0){
+                        $('#mensajeerror').show(300);
+                        $('#infofecha').hide(300); 
+                        $('#horario').hide(300); 
+                        $('#titleHorario').hide(300);
+
+                    }else{
+                        $('#infofecha').show(300);
+                        $('#horario').show(300);
+                        $('#titleHorario').show(300);
+                        $('#mensajeerror').hide(300);
+                       
+                    }
+                   
+
+                      
+                });
+                //fase 2 muestra motivo
+                $('#horario').change(function(){
+                      $('#motivo').show(300);
+                      $('#titleMotivo').show(300);  
+                });
+
+                  
+           
+            $('#motivo').change(function() {
+                //show store selector and message
+                $('#tienda').show(300);
+                $('#titleTienda').show(300);
+                $('#message').show(300);    
+                
+                //filtro dinámico tienda en función del motivo
+                var optionSelect= $("#motivo option:selected" ).val();
+                var selOptions = '';
+                if(optionSelect==="Salones"){
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp2,$tiendamlp3);
+                    //quitamos mlp4
+                    $("#tienda").find("option[value='info@mobleslapaz.com']").remove(); 
+                }else if(optionSelect==="Piso"){
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp2,$tiendamlp3);
+                    //quitamos mlp4
+                    $("#tienda").find("option[value='info@mobleslapaz.com']").remove(); 
+                }
+                else if(optionSelect==="tapiceria"){
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp4);
+                    //quitamos mlp2 y mlp3
+                    $("#tienda").find("option[value='marc@mobleslapaz.com']").remove();
+                    $("#tienda").find("option[value='mlp3@mobleslapaz.com']").remove();  
+                }
+                else if(optionSelect==="Mesas y sillas"){
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp2,$tiendamlp3,$tiendamlp4);
+                }
+
+                else if(optionSelect==="Dormitorios" || optionSelect==="Armarios" || optionSelect==="Juveniles" ){
+                    $('#tienda').prepend($tiendamlp1,$tiendamlp2,$tiendamlp3);
+                    //quitamos mlp4
+                    $("#tienda").find("option[value='info@mobleslapaz.com']").remove();
+                }
+                else if(optionSelect==="Descanso"){
+                    $('#tienda').prepend($tiendamlp4);
+                    //quitamos ml1, mlp2 y mlp3
+                    $("#tienda").find("option[value='miquel@mobleslapaz.com']").remove();
+                    $("#tienda").find("option[value='marc@mobleslapaz.com']").remove();
+                    $("#tienda").find("option[value='mlp3@mobleslapaz.com']").remove();
+                }  
+            });
+            //mostramos mapa de tienda
+            $('#tienda').change(function() {
+                var tienda = document.getElementById('tienda').value;
+                if(tienda==='miquel@mobleslapaz.com'){
+                    $('#mapaMlp1').show(300);
+                    $('#mapaMlp2').hide(300);
+                    $('#mapaMlp3').hide(300);
+                    $('#mapaMlp4').hide(300);
+
+                }else if( tienda === 'marc@mobleslapaz.com'){
+                    $('#mapaMlp2').show(300);
+                    $('#mapaMlp1').hide(300);
+                    $('#mapaMlp3').hide(300);
+                    $('#mapaMlp4').hide(300);
+                }else if( tienda === 'mlp3@mobleslapaz.com'){
+                    $('#mapaMlp3').show(300);
+                    $('#mapaMlp2').hide(300);
+                    $('#mapaMlp1').hide(300);
+                    $('#mapaMlp4').hide(300);
+                }else if (tienda === 'info@mobleslapaz.com'){
+                    $('#mapaMlp4').show(300);
+                    $('#mapaMlp2').hide(300);
+                    $('#mapaMlp3').hide(300);
+                    $('#mapaMlp1').hide(300);
+                }
+
+            });
+
+         
+           
+        })
+
+    </script>
+   
+
+  <style>
+      @import "compass/css3";
+      @import url(https://fonts.googleapis.com/css?family=Raleway);
+
+        /*map style*/
+        #mapaMlp1,  #mapaMlp2,  #mapaMlp3,  #mapaMlp4 {
+            text-align: center;
+            position: relative;
+            padding-bottom: 75%;
+            height: 0;
+            overflow: hidden;
+        }
+        #mapaMlp1 iframe{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        #mapaMlp2 iframe{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        #mapaMlp3 iframe{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        #mapaMlp4 iframe{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+     
+    
+        /*header styles*/
+        .page-header { 
+            /*background: url(https://easetemplate.com/free-website-templates/hike/images/pageheader.jpg) no-repeat;*/
+            background-color: #962130;
+            position: relative;
+            background-size: cover; 
+            }
+
+        .page-caption { 
+            padding-top: 100px;
+            padding-bottom: 100px;
+            }
+        .page-title { font-size: 46px;
+        line-height: 1; color: #fff; 
+        font-weight: 600;
+         text-align:center; 
+            }
+    
+        #infofecha, #mensajeerror{
+            color:#962130;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        
+     
+
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            /*@include box-sizing(border-box);*/
+        }
+        #btnEnviar{
+            background-color: #962130;
+            color:#fff;
+        }
+       
+        html, body {
+            font-family: Arial, sans-serif;
+           
+             background-color: #fff;
+           
+        } 
+        
+       /*footer style*/
+       hr{
+           background-color: #fff;
+       }
+       .footer {
+            background:#962130;
+            color: white;
+            font-family: Arial, sans-serif;
+}
+        .footer .links ul {
+            list-style-type: none;
+        }
+        .footer .links li a {
+            color: white;
+            transition: color 0.2s;
+        }
+        .footer .links li a:hover {
+            text-decoration: none;
+            color: #4180cb;
+        }
+        .footer .about-company i {
+            font-size: 25px;
+        }
+        .footer .about-company a {
+            color: white;
+            transition: color 0.2s;
+        }
+        .footer .about-company a:hover {
+            color: #4180cb;
+        }
+        .footer .location i {
+            font-size: 18px;
+        }
+        .footer .copyright p {
+            border-top: 1px solid rgba(255, 255, 255, .1);
+        }   
+
+      
+  </style>
+  
+ <!-- begin page-header -->
+ <div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="page-caption">
+                    <h1 class="page-title">Solicita tu cita previa</h1>
+                    <br>
+                    <p class="text-md-center text-white">Solicita tu cita previa para venir a visitarnos 
+                        con las máximas medidas de seguridad
+                        una vez hagas la solicitud, la tienda que hayas elegido se pondrá en contacto para gestionar
+                        tu cita y acordar día y hora para la visita.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page-header-->
+
+
+    <div class=" container p-4">
+        
+        <div class="row">
+            
+            <div class="col-md-6 offset-md-3">
+            <div class="card">
+                    <div class="card-body">
+                        <h5>Por favor, rellena el siguiente formulario</h3>
+                       
+                        <form action="https://us-central1-mailer-3238f.cloudfunctions.net/citas" method="POST">
+                            <br>
+                            <label class="form-group">Datos de contacto</label>
+                            <div class="form-group">
+                                <input type="text" name="name" required class="form-control"
+                                 placeholder="Nombre" required  autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="apellidos" required class="form-control"
+                                 placeholder="Apellidos" required  autofocus>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="email" name="email" required placeholder="Email" 
+                                class="form-control" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="tel" name="phone" required placeholder="Teléfono" pattern="[0-9]{9}" title="Debe introducir un número de teléfono válido"
+                                 class="form-control">
+                            </div>
+                            <label class="form-group">Selecciona una fecha para tu solicitud</label> 
+                            <div class="form-group">
+                                <input class="form-control" id="date" required
+                                 name="date" placeholder="DD/MM/YYYY" type="date"  min="2017-01-01"/>
+                            </div>
+                            <label  id="infofecha">
+                                *La fecha será confirmada por la tienda seleccionada en función de la disponibilidad.
+                            </label>
+                            <label  id="mensajeerror">
+                               Lo siento, no atendemos citas los Domingos, seleccione otro día.
+                            </label>
+                                <br>
+                            <label class="form-group" id="titleHorario">Selecciona una franja horaria
+                                 para tu cita</label> 
+                            <div class="form-group">
+                                <select required id="horario" name="horario" class="form-control">
+                                    <option disabled selected value selected> -- Horarios -- </option>
+                                    <option name="mañana" 
+                                    value="mañana">Mañana (de 10:00 a 13:30)</option>
+                                    <option name="tarde" 
+                                    value="tarde">Tarde (de 17:00 a 20:30)</option>    
+                                </select> 
+                            </div>
+
+                            <label class="form-group" id="titleMotivo">Indicanos el motivo de tu visita</label> 
+                            <div class="form-group">
+                                <select required id="motivo" name="motivo" class="form-control">
+                                    <option disabled selected value selected> -- Selecciona un motivo -- </option>
+                                    <option name="Piso completo" 
+                                    value="Piso" >Piso completo</option>
+                                    <option name="salones" 
+                                    value="Salones" >Salones</option>
+                                    <option name="Tapiceria" 
+                                    value="tapiceria">Sofás y butacas</option>
+                                    <option name="mesas y sillas" 
+                                    value="Mesas y sillas">Mesas y sillas</option>
+                                    <option name="dormitorios" 
+                                    value="Dormitorios">Dormitorios</option>
+                                    <option name="armarios" 
+                                    value="Armarios">Armarios</option>
+                                    <option name="juveniles" 
+                                    value="Juveniles">Juveniles</option>
+                                    <option name="descanso" 
+                                    value="Descanso">Descanso</option>
+                                </select>
+                            </div>
+
+                           <label id="titleTienda"class="form-group">Selecciona tu tienda</label>
+                            <div class="form-group">
+                                <select required id="tienda" name="tienda" class="form-control">
+                                    <option disabled selected value selected>-- Selecciona una tienda --</option>
+                                  </select>
+                            </div>
+                            <!--Mapa Google adrress-->
+                            <div class="form-group" id="mapaMlp1">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2991.4992776522035!2d2.2167119498527446!3d41.428387001315706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4bcaf48631def%3A0x2e9ed5e7dc8c6a2a!2sMobles%20la%20Paz%20Sant%20Adri%C3%A0!5e0!3m2!1ses!2ses!4v1616753556289!5m2!1ses!2ses" 
+                                width="400" height="300" style="border:0;" allowfullscreen=""
+                                 loading="lazy"></iframe>
+                            </div>
+                            <div class="form-group" id="mapaMlp2">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2991.879484803281!2d2.2007840498523703!3d41.420134701827614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4a3354c2b41b5%3A0x67b354fd34948e5e!2sMobles%20la%20Paz%20Puigcerd%C3%A0!5e0!3m2!1ses!2ses!4v1616754452568!5m2!1ses!2ses"
+                                 width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                            <div class="form-group" id="mapaMlp3">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2992.281693285606!2d2.191947849851989!3d41.411403402369295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4a32fe1e129fd%3A0x1ec466d0e64a5190!2sMobles%20la%20Paz%20Lope%20de%20Vega!5e0!3m2!1ses!2ses!4v1616754490492!5m2!1ses!2ses"
+                                 width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                            <div class="form-group" id="mapaMlp4">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2992.2739872420652!2d2.191743749852012!3d41.41157070235886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4a32fe0faac73%3A0x5a53f4c6aa635b3a!2sMobles%20la%20Paz%20Lope%20de%20Vega%20Sof%C3%A1s!5e0!3m2!1ses!2ses!4v1616754514356!5m2!1ses!2ses"
+                                 width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                                                        
+                            <br>
+                            <div class="form-group">
+                                <textarea  id="message" name="message" rows="2" 
+                                placeholder="Información adicional sobre tu visita" 
+                                class="form-control"></textarea>
+            
+                            </div>
+
+                            <button id="btnEnviar" class="btn btn-block">
+                               Enviar
+                            </button>
+
+                        </form>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+<!--footer-->
+    <div class="mt-5 pt-5 pb-5 footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-5 col-xs-12 about-company">
+              <h2>Mobles la Paz</h2>
+              <p class="pr-5 text-white-50">
+                Contamos con más de 50 años de experiencia y un equipo de profesionales
+                 e interioristas con conocimientos de las últimas tendencias en decoración,
+                  que te ayudarán a convertir tu casa en un hogar.
+            </p>
+              <p><a href="https://www.facebook.com/MobleslaPazBarcelona"><i class="fab fa-facebook"></i></a>
+                 <a href="https://www.instagram.com/mobles_la_paz/"><i class='fab fa-instagram'></i></a></p>
+                
+            </div>
+            <div class="col-lg-3 col-xs-12 links">
+              <h4 class="mt-lg-0 mt-sm-3">Links</h4>
+                <ul class="m-0 p-0">
+                  <li>- <a href="https://www.mobleslapaz.com/es">Inicio</a></li>
+                  <li>- <a href="https://www.mobleslapaz.com/es/contacto">Contacto</a></li>
+                  <li>- <a href="https://www.mobleslapaz.com/es/proyectos">Proyectos</a></li>
+                  <li>- <a href="https://www.mobleslapaz.com/es/sobre-nosotros">Sobre nosotros</a></li>
+                  <li>- <a href="https://www.mobleslapaz.com/es/politica-de-privacidad">Politica de privacidad</a></li>
+                  <li>- <a href="https://www.mobleslapaz.com/es/nota-legal">Aviso legal</a></li>
+                </ul>
+            </div><br>
+            <div class="col-lg-4 col-xs-12 location">
+              <h4 class="mt-lg-0 mt-sm-4">Nuestras tiendas</h4>
+
+              <p><i class="fas fa-map-marker"></i> Passeig Rambleta, 20, 08930, St.Adrià de Besòs</p>
+              <p class="mb-0"><i class="fa fa-phone mr-3"></i>93 381 33 49</p>
+              <p ><i class="fas fa-envelope"></i> mlp1@mobleslapaz.com</p>
+              <hr>
+              <p><i class="fas fa-map-marker"></i> c/Puigcerdà, 249-251, 08020, Barcelona</p>
+              <p class="mb-0"><i class="fa fa-phone mr-3"></i>93 305 00 51</p>
+              <p><i class="fas fa-envelope"></i> mlp2@mobleslapaz.com</p>
+                <hr>
+              <p><i class="fas fa-map-marker"></i> c/Lope de Vega, 259-263, 08018, Barcelona</p>
+              <p class="mb-0"><i class="fa fa-phone mr-3"></i>93 307 08 40</p>
+              <p><i class="fas fa-envelope"></i> mlp3@mobleslapaz.com</p>
+                <hr>
+             
+              <p><i class="fas fa-map-marker"></i> c/Lope de Vega, 265-267, 08018, Barcelona</p>
+              <p class="mb-0"><i class="fa fa-phone mr-3"></i>93 307 92 25</p>
+              <p><i class="fas fa-envelope"></i> info@mobleslapaz.com</p>
+              
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col copyright">
+              <p class=""><small class="text-white-50">
+                  © 2021.develop for amunozrodrig. All Rights Reserved.</small></p>
+            </div>
+          </div>
+        </div>
+        </div>
+
+</body>
+
+
+
+</html>
